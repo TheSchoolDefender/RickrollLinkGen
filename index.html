@@ -1,4 +1,5 @@
-<html><head>
+<html>
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rick Roll TinyURL Generator</title>
@@ -119,7 +120,7 @@
   function generateRandomSchoolLink() {
     const randomSchoolThing = schoolThings[Math.floor(Math.random() * schoolThings.length)];
     const randomNumber = Math.floor(Math.random() * 100);
-    return `https://www.youtube.com/watch?v=dQw4w9WgXcQ&${randomSchoolThing}${randomNumber}`;
+    return `https://schoolwork-alpha.vercel.app/?${randomSchoolThing}${randomNumber}`;
   }
 
   async function generateTinyURL(url) {
