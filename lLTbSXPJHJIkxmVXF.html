@@ -1,0 +1,152 @@
+<html><head><base href="https://example.com/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rick Roll TinyURL Generator</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    overflow: hidden;
+  }
+  .container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  h1 {
+    font-size: 3rem;
+    text-align: center;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+  }
+  #generateButton {
+    font-family: 'Caveat', cursive;
+    font-size: 2rem;
+    padding: 10px 20px;
+    background-color: #ff6b6b;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10;
+    margin-top: 20px;
+  }
+  .sticker {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-image: url('https://media.tenor.com/nBt6RZkFJh8AAAAi/never-gonna.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 5;
+  }
+  .falling-rick {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-image: url('https://media.tenor.com/nBt6RZkFJh8AAAAi/never-gonna.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 1;
+    animation: fall linear infinite;
+  }
+  @keyframes fall {
+    0% { transform: translateY(-100px); }
+    100% { transform: translateY(100vh); }
+  }
+  #generatedLink {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 10;
+  }
+  #loadingMessage {
+    margin-top: 10px;
+    font-style: italic;
+    color: #666;
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Caveat&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+  <h1>Rick Roll TinyURL Generator</h1>
+  <button id="generateButton">Generate TinyURL</button>
+  <div id="loadingMessage"></div>
+  <div id="generatedLink"></div>
+</div>
+
+<script>
+  function createSticker() {
+    const sticker = document.createElement('div');
+    sticker.classList.add('sticker');
+    sticker.style.left = Math.random() * window.innerWidth + 'px';
+    sticker.style.top = Math.random() * window.innerHeight + 'px';
+    sticker.style.transform = `rotate(${Math.random() * 360}deg)`;
+    document.body.appendChild(sticker);
+  }
+
+  function createFallingRick() {
+    const rick = document.createElement('div');
+    rick.classList.add('falling-rick');
+    rick.style.left = Math.random() * window.innerWidth + 'px';
+    rick.style.animationDuration = (Math.random() * 5 + 5) + 's';
+    document.body.appendChild(rick);
+    rick.addEventListener('animationiteration', () => {
+      rick.style.left = Math.random() * window.innerWidth + 'px';
+    });
+  }
+
+  for (let i = 0; i < 20; i++) {
+    createSticker();
+  }
+
+  for (let i = 0; i < 10; i++) {
+    createFallingRick();
+  }
+
+  const schoolThings = ['SchoolBookPlan', 'HomeworkHelper', 'StudyGuide', 'ClassNotes', 'ExamPrep', 'ProjectIdeas', 'ResearchTool', 'LearningAid', 'EducationResource', 'AcademicAssistant'];
+
+  function generateRandomSchoolLink() {
+    const randomSchoolThing = schoolThings[Math.floor(Math.random() * schoolThings.length)];
+    const randomNumber = Math.floor(Math.random() * 100);
+    return `https://www.youtube.com/watch?v=dQw4w9WgXcQ&${randomSchoolThing}${randomNumber}`;
+  }
+
+  async function generateTinyURL(url) {
+    const apiUrl = 'https://tinyurl.com/api-create.php?url=' + encodeURIComponent(url);
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error('Failed to generate TinyURL');
+    }
+    return await response.text();
+  }
+
+  document.getElementById('generateButton').addEventListener('click', async () => {
+    const loadingMessage = document.getElementById('loadingMessage');
+    const generatedLinkDiv = document.getElementById('generatedLink');
+    
+    loadingMessage.textContent = 'Generating TinyURL...';
+    generatedLinkDiv.innerHTML = '';
+    
+    try {
+      const originalLink = generateRandomSchoolLink();
+      const tinyUrl = await generateTinyURL(originalLink);
+      generatedLinkDiv.innerHTML = `<a href="${tinyUrl}" target="_blank">${tinyUrl}</a>`;
+      loadingMessage.textContent = '';
+    } catch (error) {
+      loadingMessage.textContent = 'Error: ' + error.message;
+    }
+  });
+</script>
+</body>
+</html>
